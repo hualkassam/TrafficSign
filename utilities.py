@@ -88,7 +88,7 @@ def split_data(images, targets, random_state=0):
         x_valid, y_valid = x[valid], y[valid]
         x_test, y_test = x[test], y[test]
 
-    print len(x_train), len(x_valid), len(x_test)
+    print ('Training:%s') %len(x_train), ('Validation:%s') %len(x_valid), ('Testing:%s') %len(x_test)
 
     x_train = x_train.reshape((-1, 1, pixelNo, pixelNo)).astype(np.float32)
     x_valid = x_valid.reshape((-1, 1, pixelNo, pixelNo)).astype(np.float32)
