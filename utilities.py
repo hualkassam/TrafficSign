@@ -1,19 +1,19 @@
 __author__ = 'Hussam_Qassim'
 
-import os
-import sys
-import glob
-import random
+import os # https://docs.python.org/2/library/os.html
+import sys # https://docs.python.org/2/library/sys.html
+import glob # https://docs.python.org/2/library/glob.html
+import random # https://docs.python.org/2/library/random.html
 import numpy as np
 from time import time
 
-from skimage.io import imread
-from skimage.transform import resize
-from sklearn import preprocessing
-from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
-from sklearn.cross_validation import StratifiedShuffleSplit
+from skimage.io import imread # http://scikit-image.org/docs/dev/api/skimage.io.html
+from skimage.transform import resize # http://scikit-image.org/docs/dev/api/skimage.transform.html?highlight=skimage.transform#module-skimage.transform
+from sklearn import preprocessing # http://scikit-learn.org/stable/modules/preprocessing.html
+from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score # http://scikit-learn.org/stable/modules/model_evaluation.html
+from sklearn.cross_validation import StratifiedShuffleSplit # http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html
 
-sys.setrecursionlimit(1000000)
+sys.setrecursionlimit(1000000) # https://docs.python.org/2/library/sys.html
 
 pixelNo = 128
 
@@ -47,7 +47,7 @@ def readTrainingImages():
                 images.append(resize(imread(imageReading, as_grey=True), (pixelNo, pixelNo)))
                 targets.append(label)
             label += 1
-    print "labels: ", label, " number of images: ", len(targets) 
+    print "Labels: ", label, " Number of Images: ", len(targets)
     return images, targets
 
 
@@ -61,18 +61,18 @@ def scaleImages(images):
 
 
 def load_images():
-    print "Image reading"
+    print "Image Reading.."
     t = time()
     images, targets = readTrainingImages()
-    print "Time: ", round(time()-t, 3), "\n"
+    print "Time: ", round(time()-t, 3), "Sec" "\n"
 
     images = np.asarray(images)
     targets = np.asarray(targets)
 
-    print "Image Scaling"
+    print "Image Scaling.."
     t = time()
     images= scaleImages(images)
-    print "Time: ", round(time()-t, 3), "\n"
+    print "Time: ", round(time()-t, 3), "Sec" "\n"
 
     return images, targets
 
@@ -88,7 +88,7 @@ def split_data(images, targets, random_state=0):
         x_valid, y_valid = x[valid], y[valid]
         x_test, y_test = x[test], y[test]
 
-    print len(x_train), len(x_valid), len(x_test)
+    print ('Training:%s') %len(x_train), "" ,('Validation:%s') %len(x_valid), "", ('Testing:%s') %len(x_test)
 
     x_train = x_train.reshape((-1, 1, pixelNo, pixelNo)).astype(np.float32)
     x_valid = x_valid.reshape((-1, 1, pixelNo, pixelNo)).astype(np.float32)

@@ -1,13 +1,13 @@
 __author__ = 'Hussam_Qassim'
 '''
-    open text file for writing
+    Open text file for writing
    
 	Read the images
 	Resize the images
-	Split them to train, valid, and test
+	Split them into train, valid, and test
 		Reshape them
 		Convert the type to suitable data type
-	Build the model 7 layers CNN
+	Build the model 2 layers CNN
 	Build mini-batch iterator
 	Train the model
 	Test the model
@@ -16,12 +16,12 @@ __author__ = 'Hussam_Qassim'
 	Test it
 	Check Accuracy
 '''
-import warnings
+import warnings # https://docs.python.org/2/library/warnings.html
 warnings.filterwarnings("ignore")
 
 from utilities import *
 from neuralnet import *
-import cPickle as pickle
+import cPickle as pickle # https://docs.python.org/2/library/pickle.html#data-stream-format
 
 
 
@@ -35,27 +35,27 @@ t = time()
 
 images, targets= load_images()
 x_train, y_train, x_valid, y_valid, x_test, y_test = split_data(images, targets)
-network = build_model()
+network = build_model() # Call the build_model in th neuralnet file
 
 learning_rate = 0.01
-lr = theano.shared(np.float32(0.01))
+lr = theano.shared(np.float32(0.01)) # http://deeplearning.net/software/theano/library/compile/shared.html
 best_loss = 100
 best_loss_count = 0
 
-best_params = lasagne.layers.get_all_param_values(network)
+best_params = lasagne.layers.get_all_param_values(network) # http://lasagne.readthedocs.org/en/latest/modules/layers/helper.html#lasagne.layers.get_all_param_values
 
-prediction = lasagne.layers.get_output(network, deterministic=False)
-loss = lasagne.objectives.categorical_crossentropy(prediction, target_var)
+prediction = lasagne.layers.get_output(network, deterministic=False) # http://lasagne.readthedocs.org/en/latest/modules/layers/helper.html#lasagne.layers.get_output
+loss = lasagne.objectives.categorical_crossentropy(prediction, target_var) # http://lasagne.readthedocs.org/en/latest/modules/objectives.html#lasagne.objectives.categorical_crossentropy
 loss = loss.mean()
 params = lasagne.layers.get_all_params(network, trainable=True)
-updates = lasagne.updates.nesterov_momentum(loss, params, learning_rate=lr, momentum=0.9)
+updates = lasagne.updates.nesterov_momentum(loss, params, learning_rate=lr, momentum=0.9) # http://lasagne.readthedocs.org/en/latest/modules/updates.html#lasagne.updates.nesterov_momentum
 
 test_prediction = lasagne.layers.get_output(network, deterministic=True)
 test_loss = lasagne.objectives.categorical_crossentropy(test_prediction, target_var)
 test_loss = test_loss.mean()
-test_acc = T.mean(T.eq(T.argmax(test_prediction, axis=1), target_var), dtype=theano.config.floatX)
+test_acc = T.mean(T.eq(T.argmax(test_prediction, axis=1), target_var), dtype=theano.config.floatX) # http://deeplearning.net/software/theano/tutorial/modes.html
 
-train_fun = theano.function([input_var, target_var], loss, updates=updates)
+train_fun = theano.function([input_var, target_var], loss, updates=updates) # http://deeplearning.net/software/theano/library/compile/function.html
 valid_fun = theano.function([input_var, target_var], [test_loss, test_acc])
 
 
@@ -79,21 +79,22 @@ for epoch in range(num_epochs):
 	print "\t\tvalid_loss: ", format(valid_loss, '.6f'), "\t\tvalid_acc: ", format(valid_acc, '.6f')
 
 	if valid_loss < best_loss:
-		print "New best loss"
+		print "New best loss.."
 		best_loss = valid_loss
-		best_params = lasagne.layers.get_all_param_values(network)
+		best_params = lasagne.layers.get_all_param_values(network) # http://lasagne.readthedocs.org/en/latest/modules/layers/helper.html#lasagne.layers.get_all_param_values
 		best_loss_count = 0
+		print (best_params)
 	else:
 		best_loss_count += 1
 		if (best_loss_count%5) == 0:
-			print "Updating learning rate"
+			print "Updating learning rate.."
 			learning_rate /= 10
 			lr.set_value(np.float32(learning_rate))
 		if best_loss_count == 20:
-			print "Early Stopping"
+			print "..Early Stopping.."
 			break
 
-lasagne.layers.set_all_param_values(network, best_params)
+lasagne.layers.set_all_param_values(network, best_params) # http://lasagne.readthedocs.org/en/latest/modules/layers/helper.html#lasagne.layers.set_all_param_values
 
 
 valid_acc = 0
@@ -119,11 +120,11 @@ text_file.write("\n")
 
 
 with open('model.pickle', 'wb') as f:
-    pickle.dump(network, f, -1)
+    pickle.dump(network, f, -1) # https://docs.python.org/2/library/pickle.html
 
 
 text_file.close()
-print "Total Time: ", round(time()-totalTime, 3), "\n"
+print "Total Time: ", round(time()-totalTime, 3), "Sec" "\n"
 
 
 
