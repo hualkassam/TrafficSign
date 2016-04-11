@@ -83,7 +83,6 @@ for epoch in range(num_epochs):
 		best_loss = valid_loss
 		best_params = lasagne.layers.get_all_param_values(network) # http://lasagne.readthedocs.org/en/latest/modules/layers/helper.html#lasagne.layers.get_all_param_values
 		best_loss_count = 0
-		print (best_params)
 	else:
 		best_loss_count += 1
 		if (best_loss_count%5) == 0:
@@ -124,7 +123,8 @@ with open('model.pickle', 'wb') as f:
 
 
 text_file.close()
-print "Total Time: ", round(time()-totalTime, 3), "Sec" "\n"
+T_time = (round(time()-totalTime, 3))/60
+print "Total Time: ", T_time, "Min" "\n"
 
 
 
